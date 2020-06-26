@@ -1,0 +1,3 @@
+# On veut sécuriser le dossier courant pour ne pas qu'il visible
+# depuis le web
+deny from all

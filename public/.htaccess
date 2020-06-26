@@ -1,0 +1,25 @@
+# On veut pouvoir passer localhost.../index.php?page=store
+# à ceci localhost.../store
+# Pour ce faire, on va utiliser la réécriture d'URL (Url rewriting)
+# Chaque fois que apache verra /store ==> /index.php?page=store
+# ..
+# Chaque fois que apache verra /maPage ==> /index.php?page=maPage
+
+# On active tout d'abord la réécriture d'URL
+RewriteEngine On
+
+
+# La réécriture d'URL c'est sympa, par contre en cas d'utilisation 
+# d'url relative (par rapport au dossier courant), on peut ne
+# plus retrouver nos fichiers (css, images, ...) ==> Erreur 404
+# Solution : Créer ce qu'on appelle une variable d'environnement qui
+# va stocker la partie statique de notre url
+# On récupère tout ça : /oclock/hyperion/s05/s05-e02-exo-controllers-views-charlesen
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE_URI:%1]
+
+# Mon cher Apache, Chaque fois que tu verras /maPage ==> /index.php?page=/maPage
+# Mon cher Apache, Chaque fois que tu verras /about ==> /index.php?page=/about
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?page=/$1 [QSA,L]
